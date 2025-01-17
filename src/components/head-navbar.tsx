@@ -1,8 +1,8 @@
 import {
   Card,
   Flex,
-  HStack,
   Icon,
+  Stack,
   Tab,
   TabList,
   Tabs,
@@ -26,7 +26,8 @@ const HeadNavBar = () => {
   const { t } = useTranslation();
   const { config } = useLauncherConfig();
   const primaryColor = config.appearance.theme.primaryColor;
-  const isSimplified = config.appearance.theme.headNavStyle === "simplified";
+  const isSimplified = config.appearance.theme.headNavStyle !== "standard";
+  const isVertical = config.appearance.theme.headNavStyle === "simplified-left";
 
   const navList = [
     { icon: LuZap, label: "launch", path: "/launch" },
@@ -44,12 +45,21 @@ const HeadNavBar = () => {
 
   return (
     <Flex justify="center" p={4}>
-      <Card className="content-blur-bg" px={8} py={2}>
-        <HStack spacing={4}>
+      <Card
+        className="content-blur-bg"
+        px={isVertical ? 2 : 8}
+        py={isVertical ? 8 : 2}
+      >
+        <Stack
+          spacing={4}
+          direction={isVertical ? "column" : "row"}
+          alignItems="center"
+        >
           <TitleShort />
           <Tabs
             variant="soft-rounded"
             size="sm"
+            orientation={isVertical ? "vertical" : "horizontal"}
             colorScheme={primaryColor}
             index={selectedIndex}
             onChange={(index) => {
@@ -65,18 +75,30 @@ const HeadNavBar = () => {
                   isDisabled={!isSimplified || selectedIndex === index}
                 >
                   <Tab fontWeight={selectedIndex === index ? "600" : "normal"}>
-                    <HStack spacing={2}>
+                    <Stack
+                      spacing={2}
+                      direction={isVertical ? "column" : "row"}
+                      alignItems="center"
+                    >
                       <Icon as={item.icon} />
                       {(!isSimplified || selectedIndex === index) && (
-                        <Text>{t(`HeadNavBar.navList.${item.label}`)}</Text>
+                        <Text
+                          style={{
+                            writingMode: isVertical
+                              ? "vertical-rl"
+                              : "horizontal-tb",
+                          }}
+                        >
+                          {t(`HeadNavBar.navList.${item.label}`)}
+                        </Text>
                       )}
-                    </HStack>
+                    </Stack>
                   </Tab>
                 </Tooltip>
               ))}
             </TabList>
           </Tabs>
-        </HStack>
+        </Stack>
       </Card>
     </Flex>
   );

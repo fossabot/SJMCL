@@ -11,6 +11,8 @@ interface MainLayoutProps {
 const MainLayout = ({ children }: MainLayoutProps) => {
   const router = useRouter();
   const { config } = useLauncherConfig();
+  const isNavOnLeft =
+    config.appearance.theme.headNavStyle === "simplified-left";
 
   if (router.pathname.startsWith("/standalone")) return children;
 
@@ -23,7 +25,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
 
   return (
     <Flex
-      direction="column"
+      direction={isNavOnLeft ? "row" : "column"}
       h="100vh"
       bgImg={`url('/images/backgrounds/${config.appearance.background.presetChoice}.jpg')`}
       bgSize="cover"
@@ -36,7 +38,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       ) : (
         <Card
           className="content-blur-bg"
-          h="100%"
+          h={isNavOnLeft ? "inherit" : "100%"}
           overflow="auto"
           mt={1}
           mb={4}
