@@ -11,6 +11,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import { LuArrowLeft, LuChevronRight } from "react-icons/lu";
 
 export interface SectionProps extends Omit<BoxProps, "children"> {
@@ -21,6 +22,7 @@ export interface SectionProps extends Omit<BoxProps, "children"> {
   isAccordion?: boolean;
   initialIsOpen?: boolean;
   withBackButton?: boolean;
+  sticky?: boolean;
   children?: React.ReactNode;
 }
 
@@ -32,16 +34,25 @@ export const Section: React.FC<SectionProps> = ({
   isAccordion = false,
   initialIsOpen = true,
   withBackButton = false,
+  sticky = false,
   children,
   ...props
 }) => {
   const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: initialIsOpen });
+  const [isSticky] = useState(sticky);
   const router = useRouter();
 
   return (
     <Box {...props}>
       {(isAccordion || title || description) && (
-        <Flex alignItems="flex-start" flexShrink={0} mb={isOpen ? 2.5 : 0}>
+        <Flex
+          alignItems="flex-start"
+          flexShrink={0}
+          mb={isOpen ? 2.5 : 0}
+          position={isSticky ? "sticky" : "relative"}
+          top={isSticky ? 0 : "auto"}
+          zIndex={isSticky ? 10 : "auto"}
+        >
           <HStack spacing={1}>
             {withBackButton && (
               <IconButton
