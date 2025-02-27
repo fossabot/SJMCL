@@ -24,6 +24,10 @@
           "title": "BMCLAPI",
           "description": "Thanks to @bangbang93 for providing the high-speed download source mirror"
         },
+        "gnwork": {
+          "title": "GNwork",
+          "description": "Thanks to the renowned voxel creative team GNwork for assisting with rendering and providing some preset background images"
+        },
         "hmcl": {
           "title": "Hello Minecraft! Launcher",
           "description": "Some design and code implementation are referenced from this open-source project"

@@ -20,6 +20,7 @@ import {
   VStack,
   Wrap,
   WrapItem,
+  useColorMode,
 } from "@chakra-ui/react";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { appDataDir } from "@tauri-apps/api/path";
@@ -42,6 +43,8 @@ const AppearanceSettingsPage = () => {
   const { t } = useTranslation();
   const { config, update } = useLauncherConfig();
   const toast = useToast();
+  const { colorMode } = useColorMode();
+
   const appearanceConfigs = config.appearance;
   const primaryColor = appearanceConfigs.theme.primaryColor;
   const selectedBgKey = appearanceConfigs.background.choice.replace(
@@ -287,7 +290,7 @@ const AppearanceSettingsPage = () => {
           <WrapItem key={bg}>
             <BackgroundCard
               bgAlt={bg}
-              bgSrc={`/images/backgrounds/${bg}.jpg`}
+              bgSrc={`/images/backgrounds/${bg}-${colorMode}.jpg`}
               selected={selectedBgKey === bg}
               onSelect={() =>
                 update("appearance.background.choice", `%built-in:${bg}`)

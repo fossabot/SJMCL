@@ -2,6 +2,7 @@ import {
   Card,
   Center,
   Flex,
+  useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -25,6 +26,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const router = useRouter();
   const { config, update } = useLauncherConfig();
   const themedStyles = useThemedCSSStyle();
+  const { colorMode } = useColorMode();
 
   const [bgImgSrc, setBgImgSrc] = useState<string>("");
   const isCheckedRunCount = useRef(false);
@@ -71,9 +73,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   useEffect(() => {
     const constructBgImgSrc = async () => {
       const bgKey = config.appearance.background.choice;
+      console.warn(colorMode);
       if (bgKey.startsWith("%built-in:")) {
         setBgImgSrc(
-          `/images/backgrounds/${bgKey.replace("%built-in:", "")}.jpg`
+          `/images/backgrounds/${bgKey.replace("%built-in:", "")}-${colorMode}.jpg`
         );
       } else {
         const _appDataDir = await appDataDir();
@@ -84,7 +87,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     };
 
     constructBgImgSrc();
-  }, [config.appearance.background.choice]);
+  }, [config.appearance.background.choice, colorMode]);
 
   const getGlobalExtraStyle = (config: any) => {
     const isInvertColors = config.appearance.accessibility.invertColors;

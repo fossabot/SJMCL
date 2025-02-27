@@ -98,6 +98,13 @@ const AboutSettingsPage = () => {
           ),
         },
         {
+          title: t("AboutSettingsPage.ack.settings.gnwork.title"),
+          description: t("AboutSettingsPage.ack.settings.gnwork.description"),
+          children: (
+            <LinkIconButton url="" aria-label="gnwork" isExternal withTooltip />
+          ),
+        },
+        {
           title: t("AboutSettingsPage.ack.settings.hmcl.title"),
           description: t("AboutSettingsPage.ack.settings.hmcl.description"),
           children: (

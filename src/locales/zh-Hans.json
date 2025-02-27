@@ -24,6 +24,10 @@
           "title": "BMCLAPI",
           "description": "感谢 @bangbang93 提供的高速下载源"
         },
+        "gnwork": {
+          "title": "GNwork",
+          "description": "感谢知名体素创意团队 GNwork 帮助渲染与提供部分预设背景图"
+        },
         "hmcl": {
           "title": "Hello Minecraft! Launcher",
           "description": "部分设计与代码实现参考此开源项目"
@@ -217,7 +221,7 @@
           "name": "银淞雪镇"
         },
         "SJTU-eastgate": {
-          "name": "SJTU 紫气东来门"
+          "name": "方块交大东大门"
         }
       }
     },
