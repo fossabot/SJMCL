@@ -102,6 +102,9 @@ export default function App({ Component, pageProps }: AppProps) {
       return <>{children}</>;
     }; // default layout
   }, [layoutKey, layoutMappings]);
+  // use layoutKey as a dependency to ensure SpecLayout remains stable
+  // when switching tabs in game instance page
+  // see https://github.com/UNIkeEN/SJMCL/pull/491
 
   return (
     <ChakraProvider theme={chakraExtendTheme}>
