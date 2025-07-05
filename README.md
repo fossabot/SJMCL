@@ -13,17 +13,19 @@
 * **Multi-Account System Support**: Built-in Microsoft login and third-party authentication server support, compatible with the OAuth login process proposed by the Yggdrasil Connect proposal.
 * **Deeplink Integration**: Integrates with external websites and tool collections, providing convenient features such as desktop shortcuts for launching instances through system deeplinks.
 
+> Note: some features may be limited by region, platform, or bundle type.
+
 ### Built with
 
 [![Tauri](https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
 [![Next JS](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![Chakra UI](https://img.shields.io/badge/chakra_ui-v2-38B2AC?style=for-the-badge&logo=chakraui&logoColor=white&labelColor=319795)](https://v2.chakra-ui.com/)
 
-## Download
+## Getting Started
 
-Getting started with SJMCL is simple, just download the latest release from the [official website]().
+Getting started with SJMCL is simple, just download the latest release from the [Official Website](https://mc.sjtu.cn/sjmcl/en).
 
-You can also find all the releases in [GitHub Releases](https://github.com/UNIkeEN/SJMCL/releases).
+You can also find all the releases, including the nightly versions, on [GitHub Releases](https://github.com/UNIkeEN/SJMCL/releases).
 
 SJMCL currently supports the following platforms:
 
@@ -33,7 +35,8 @@ SJMCL currently supports the following platforms:
 | macOS     | 10.15 and above     | `aarch64`, `x86_64`     | `.app`, `.dmg`                          |
 | Linux     | webkit2gtk 4.1 (e.g., Ubuntu 22.04) | `x86_64`| `.AppImage`, `.deb`, `.rpm`, portable binary |
 
-Note: some features are only available on specific platforms or specific bundle types.
+To learn about how to use SJMCL’s features and browse frequently asked questions, please refer to the [User Documentation](https://mc.sjtu.cn/sjmcl/en/docs).
+
 
 ## Development and Contributing
 
@@ -53,11 +56,12 @@ npm run tauri dev
 We warmly invite contributions from everyone. 
 
 * Before you get started, please take a moment to review our [Contributing Guide](https://github.com/UNIkeEN/SJMCL/blob/main/CONTRIBUTING.md) (includes more details on the development workflow). 
+* API references and some developers’ insights can be found in the [Developer Documentation](https://mc.sjtu.cn/sjmcl/en/dev/license).
 * Feel free to share your ideas through [Pull Requests](https://github.com/UNIkeEN/SJMCL/pulls) or [GitHub Issues](https://github.com/UNIkeEN/SJMCL/issues).
 
 ### Repo Activity
 
-TBD
+TBD <!-- TODO: https://repobeats.axiom.co -->
 
 ## Copyright
 
@@ -72,3 +76,18 @@ By GPLv3 License term 7, we require that when you distribute a modified version 
 1. Use a different software name than SJMCL or SJMC Launcher;
 2. Do not remove the function of sending user statisitics to our statisitics server (`src-tauri/src/utils/sys_info.rs`), and send only version numbers with prefix (more than two letters, e.g. `XX-0.0.1`).
 3. Mark clearly in your repository README file, your distribution website or thread, Support documents, About Page in the software that you program is based on SJMCL and give out the url of the origin repository.
+
+<!-- TODO: FOSSA Here -->
+
+## Community Partners
+
+We sincerely thank the following organizations for their development and community support throughout the SJMCL project.
+
+<div class="partner-logos" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+  <a href="https://mc.sjtu.cn/en/" target="_blank" title="SJMC">
+    <img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 75px;"/>
+  </a>
+  <a href="https://www.suesmc.ltd/" target="_blank" title="SUES-MC">
+    <img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 75px;"/>
+  </a>
+</div>
