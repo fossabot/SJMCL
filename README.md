@@ -83,13 +83,15 @@ By GPLv3 License term 7, we require that when you distribute a modified version 
 
 We sincerely thank the following organizations for their development and community support throughout the SJMCL project.
 
-<div style="display: flex; flex-wrap: wrap; gap: 1em; align-items: center;">
+<div>
   <a href="https://mc.sjtu.cn/en/" target="_blank">
     <img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 75px;"/>
   </a>
+  &nbsp;&nbsp;
   <a href="https://www.suesmc.ltd/" target="_blank">
     <img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 75px;"/>
   </a>
+  &nbsp;&nbsp;
   <a href="https://www.mualliance.cn/en" target="_blank">
     <picture>
       <source srcset="docs/figs/partners/mua-dark.png" media="(prefers-color-scheme: dark)">
