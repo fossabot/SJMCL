@@ -107,4 +107,4 @@ We sincerely thank the following organizations for their development and communi
     <source srcset="docs/figs/partners/gnwork.png" media="(prefers-color-scheme: light)">
     <img src="docs/figs/partners/gnwork.png" alt="GNWORK" style="height: 45px;">
   </picture>
-](https://www.mualliance.cn/en)
+](https://space.bilibili.com/403097853)
