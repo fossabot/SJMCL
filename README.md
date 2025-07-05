@@ -83,15 +83,21 @@ By GPLv3 License term 7, we require that when you distribute a modified version 
 
 We sincerely thank the following organizations for their development and community support throughout the SJMCL project.
 
-[<img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 75px;"/>](https://mc.sjtu.cn/en/)
+[
+  <picture>
+    <source srcset="docs/figs/partners/sjmc-dark.png" media="(prefers-color-scheme: dark)">
+    <source srcset="docs/figs/partners/sjmc.png" media="(prefers-color-scheme: light)">
+    <img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 65px;">
+  </picture>
+](https://mc.sjtu.cn/en/)
 &nbsp;&nbsp;&nbsp;&nbsp;
-[<img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 75px;"/>](https://www.suesmc.ltd/)
+[<img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 65px;"/>](https://www.suesmc.ltd/)
 
 [
   <picture>
     <source srcset="docs/figs/partners/mua-dark.png" media="(prefers-color-scheme: dark)">
     <source srcset="docs/figs/partners/mua.png" media="(prefers-color-scheme: light)">
-    <img src="docs/figs/partners/mua.png" alt="MUA" style="height: 60px;">
+    <img src="docs/figs/partners/mua.png" alt="MUA" style="height: 45px;">
   </picture>
 ](https://www.mualliance.cn/en)
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -99,6 +105,6 @@ We sincerely thank the following organizations for their development and communi
   <picture>
     <source srcset="docs/figs/partners/gnwork-dark.png" media="(prefers-color-scheme: dark)">
     <source srcset="docs/figs/partners/gnwork.png" media="(prefers-color-scheme: light)">
-    <img src="docs/figs/partners/gnwork.png" alt="MUA" style="height: 60px;">
+    <img src="docs/figs/partners/gnwork.png" alt="GNWORK" style="height: 45px;">
   </picture>
 ](https://www.mualliance.cn/en)
