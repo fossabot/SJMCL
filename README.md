@@ -85,10 +85,18 @@ We sincerely thank the following organizations for their development and communi
 
 [<img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 75px;"/>](https://mc.sjtu.cn/en/)
 [<img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 75px;"/>](https://www.suesmc.ltd/)
+
 [
   <picture>
     <source srcset="docs/figs/partners/mua-dark.png" media="(prefers-color-scheme: dark)">
     <source srcset="docs/figs/partners/mua.png" media="(prefers-color-scheme: light)">
-    <img src="docs/figs/partners/mua-dark.png" alt="MUA" style="height: 75px;">
+    <img src="docs/figs/partners/mua.png" alt="MUA" style="height: 60px;">
+  </picture>
+](https://www.mualliance.cn/en)
+[
+  <picture>
+    <source srcset="docs/figs/partners/gnwork-dark.png" media="(prefers-color-scheme: dark)">
+    <source srcset="docs/figs/partners/gnwork.png" media="(prefers-color-scheme: light)">
+    <img src="docs/figs/partners/gnwork.png" alt="MUA" style="height: 60px;">
   </picture>
 ](https://www.mualliance.cn/en)
