@@ -90,7 +90,7 @@ We sincerely thank the following organizations for their development and communi
     <img src="docs/figs/partners/sjmc.png" alt="SJMC" style="height: 65px;">
   </picture>
 ](https://mc.sjtu.cn/en/)
-&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;
 [<img src="docs/figs/partners/sues-mc.png" alt="SUES-MC" style="height: 65px;"/>](https://www.suesmc.ltd/)
 
 [
