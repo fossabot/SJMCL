@@ -9,7 +9,7 @@ use std::io::{BufRead, BufReader};
 use std::process::{Child, Command};
 use std::sync::{atomic, mpsc::Sender, Arc, Mutex};
 use std::thread;
-use std::time::{Instant, SystemTime, UNIX_EPOCH};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Emitter, Manager};
 use tokio;
 
@@ -19,7 +19,7 @@ pub async fn monitor_process(
   instance_id: String,
   display_log_window: bool,
   launcher_visibility: LauncherVisiablity,
-  ready_tx: Sender<()>,
+  ready_tx: Arc<Sender<()>>,
 ) -> SJMCLResult<()> {
   // create unique log window
   let timestamp = SystemTime::now()
@@ -52,11 +52,12 @@ pub async fn monitor_process(
     thread::spawn(move || {
       let reader = BufReader::new(out);
       for line in reader.lines().map_while(Result::ok) {
+        println!("[Game Process Output] {}", line);
         if display_log_window {
           let _ = app_stdout.emit_to(&label_stdout, GAME_PROCESS_OUTPUT_EVENT, &line);
         }
 
-        // the first time when log contains 'render thread', 'lwjgl version', or 'lwjgl openal', send signal to launch command, close frontend modal.
+        // the first time when log contains 'render thread', 'lwjgl version', or 'lwjgl openal', send sign·al to launch command, close frontend modal.
         if !game_ready_flag.load(atomic::Ordering::SeqCst)
           && READY_FLAG.iter().any(|p| line.to_lowercase().contains(p))
         {
@@ -85,6 +86,7 @@ pub async fn monitor_process(
     thread::spawn(move || {
       let reader = BufReader::new(err);
       for line in reader.lines().map_while(Result::ok) {
+        eprintln!("[Game Process Error] {}", line);
         if display_log_window {
           let _ = app_stderr.emit_to(&label_stderr, GAME_PROCESS_OUTPUT_EVENT, &line);
         }
@@ -105,6 +107,81 @@ pub async fn monitor_process(
     });
   }
 
+  // monitor process early exit
+  let child_pid = child.id();
+  let ready_tx_clone = ready_tx.clone();
+  let app_early_exit = app.clone();
+  let label_early_exit = label.clone();
+  let game_ready_flag_monitor = game_ready_flag.clone();
+
+  thread::spawn(move || {
+    // Give the process a moment to start
+    thread::sleep(Duration::from_millis(1000));
+
+    // Continuously monitor the process until it's ready or exits
+    loop {
+      // If game is already ready, stop monitoring early exit
+      if game_ready_flag_monitor.load(atomic::Ordering::SeqCst) {
+        break;
+      }
+
+      let process_exists = {
+        #[cfg(target_os = "windows")]
+        {
+          use std::process::Command as SysCommand;
+          match SysCommand::new("tasklist")
+            .args(&["/FI", &format!("PID eq {}", child_pid)])
+            .output()
+          {
+            Ok(output) => {
+              let output_str = String::from_utf8_lossy(&output.stdout);
+              output_str.contains(&child_pid.to_string())
+            }
+            Err(_) => true, // Assume process exists if we can't check
+          }
+        }
+
+        #[cfg(not(target_os = "windows"))]
+        {
+          use std::process::Command as SysCommand;
+          match SysCommand::new("ps")
+            .args(&["-p", &child_pid.to_string()])
+            .output()
+          {
+            Ok(output) => output.status.success(),
+            Err(_) => true, // Assume process exists if we can't check
+          }
+        }
+      };
+
+      if !process_exists {
+        eprintln!(
+          "[Game Process] Process with PID {} exited early, possibly failed to start",
+          child_pid
+        );
+        let _ = ready_tx_clone.send(());
+
+        // Use tokio::spawn for async operation
+        let app_clone = app_early_exit.clone();
+        let label_clone = label_early_exit.clone();
+        tokio::spawn(async move {
+          let _ = create_webview_window(
+            &app_clone,
+            &label_clone.replace("log", "error"),
+            "game_error",
+            None,
+          )
+          .await;
+        });
+
+        break;
+      }
+
+      // Check every 500ms
+      thread::sleep(Duration::from_millis(500));
+    }
+  });
+
   // handle game process exit
   let instance_id_clone = instance_id.clone();
   let mut dummy_child;
@@ -123,22 +200,29 @@ pub async fn monitor_process(
   let _ = dummy_child.wait();
   let mut child = std::mem::replace(child, dummy_child);
   let game_ready_flag = game_ready_flag.clone();
+  let ready_tx_clone = ready_tx.clone();
+  let app_clone = app.clone();
+  let label_clone = label.clone();
   tokio::spawn(async move {
     if let Ok(status) = child.wait() {
       if !game_ready_flag.load(atomic::Ordering::SeqCst) {
-        let _ = ready_tx.send(());
+        let _ = ready_tx_clone.send(());
       }
 
       // handle launcher main window visiablity
       match launcher_visibility {
         LauncherVisiablity::RunningHidden => {
-          let main_window = app.get_webview_window("main").expect("no main window");
+          let main_window = app_clone
+            .get_webview_window("main")
+            .expect("no main window");
           let _ = main_window.show();
           let _ = main_window.set_focus();
         }
         LauncherVisiablity::StartHidden => {
           // If the main window is still hidden (not shown again due to the single instance plugin when the user runs the launcher again), exit the launcher process
-          let main_window = app.get_webview_window("main").expect("no main window");
+          let main_window = app_clone
+            .get_webview_window("main")
+            .expect("no main window");
           if let Ok(is_visible) = main_window.is_visible() {
             if !is_visible {
               std::process::exit(0);
@@ -158,8 +242,13 @@ pub async fn monitor_process(
         }
       } else {
         println!("Game process exited with an error status: {:?}", status);
-        let _ =
-          create_webview_window(&app, &label.replace("log", "error"), "game_error", None).await;
+        let _ = create_webview_window(
+          &app_clone,
+          &label_clone.replace("log", "error"),
+          "game_error",
+          None,
+        )
+        .await;
       }
 
       // calc and update play time
@@ -167,7 +256,7 @@ pub async fn monitor_process(
       if let Some(start_time) = *start_time_lock {
         let elapsed_time = start_time.elapsed().as_secs() as u128;
 
-        let binding = app.state::<Mutex<HashMap<String, Instance>>>();
+        let binding = app_clone.state::<Mutex<HashMap<String, Instance>>>();
         let mut state = binding.lock().unwrap();
         if let Some(instance) = state.get_mut(&instance_id_clone) {
           instance.play_time += elapsed_time;

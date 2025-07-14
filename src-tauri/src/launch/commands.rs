@@ -27,7 +27,7 @@ use crate::{
 };
 use std::collections::HashMap;
 use std::process::{Command, Stdio};
-use std::sync::{mpsc, Mutex};
+use std::sync::{mpsc, Arc, Mutex};
 use tauri::{AppHandle, Manager, State};
 
 #[cfg(target_os = "windows")]
@@ -208,7 +208,7 @@ pub async fn launch_game(
     instance_id,
     game_config.display_game_log,
     game_config.launcher_visibility.clone(),
-    tx,
+    Arc::new(tx),
   )
   .await?;
   let _ = rx.recv();
