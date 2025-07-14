@@ -57,7 +57,7 @@ pub async fn monitor_process(
           let _ = app_stdout.emit_to(&label_stdout, GAME_PROCESS_OUTPUT_EVENT, &line);
         }
 
-        // the first time when log contains 'render thread', 'lwjgl version', or 'lwjgl openal', send sign·al to launch command, close frontend modal.
+        // the first time when log contains 'render thread', 'lwjgl version', or 'lwjgl openal', send signal to launch command, close frontend modal.
         if !game_ready_flag.load(atomic::Ordering::SeqCst)
           && READY_FLAG.iter().any(|p| line.to_lowercase().contains(p))
         {
@@ -115,9 +115,6 @@ pub async fn monitor_process(
   let game_ready_flag_monitor = game_ready_flag.clone();
 
   thread::spawn(move || {
-    // Give the process a moment to start
-    thread::sleep(Duration::from_millis(1000));
-
     // Continuously monitor the process until it's ready or exits
     loop {
       // If game is already ready, stop monitoring early exit
@@ -128,8 +125,7 @@ pub async fn monitor_process(
       let process_exists = {
         #[cfg(target_os = "windows")]
         {
-          use std::process::Command as SysCommand;
-          match SysCommand::new("tasklist")
+          match Command::new("tasklist")
             .args(&["/FI", &format!("PID eq {}", child_pid)])
             .output()
           {
@@ -143,8 +139,7 @@ pub async fn monitor_process(
 
         #[cfg(not(target_os = "windows"))]
         {
-          use std::process::Command as SysCommand;
-          match SysCommand::new("ps")
+          match Command::new("ps")
             .args(&["-p", &child_pid.to_string()])
             .output()
           {
