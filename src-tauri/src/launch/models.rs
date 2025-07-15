@@ -1,4 +1,5 @@
 use crate::account::models::PlayerInfo;
+use crate::instance::helpers::assets::AssetIndex;
 use crate::instance::helpers::client_json::McClientInfo;
 use crate::instance::models::misc::Instance;
 use crate::launcher_config::models::{GameConfig, JavaInfo};
@@ -9,7 +10,9 @@ use strum_macros::Display;
 #[derive(Debug, Display)]
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum LaunchError {
+  DirectoryNotFound,
   NoSuitableJava,
+  GameFilesIncomplete,
   SetProcessPriorityFailed,
   ChangeWindowTitleFailed,
   KillProcessFailed,
@@ -27,6 +30,7 @@ pub struct LaunchingState {
   pub selected_instance: Instance,
   pub game_config: GameConfig,
   pub client_info: McClientInfo,
+  pub asset_index: AssetIndex,
   pub selected_player: Option<PlayerInfo>, // use Option to avoid SmartDefault trait error
   pub auth_server_meta: String,
   #[default = 0] // default means not set yet
