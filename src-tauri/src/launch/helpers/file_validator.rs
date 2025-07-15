@@ -1,11 +1,8 @@
 use crate::{
   error::SJMCLResult,
   instance::{
-    helpers::{
-      assets::AssetIndex,
-      client_json::{DownloadsArtifact, FeaturesInfo, IsAllowed, McClientInfo},
-    },
-    models::misc::InstanceError,
+    helpers::client_json::{DownloadsArtifact, FeaturesInfo, IsAllowed, McClientInfo},
+    models::misc::{AssetIndex, InstanceError},
   },
   resource::{
     helpers::misc::get_download_api,
@@ -67,7 +64,7 @@ pub fn get_native_library_artifacts(client_info: &McClientInfo) -> Vec<Downloads
   artifacts.into_iter().collect()
 }
 
-pub async fn validate_library_files(
+pub async fn get_invalid_library_files(
   source: SourceType,
   library_path: &Path,
   client_info: &McClientInfo,
@@ -196,7 +193,7 @@ pub async fn extract_native_libraries(
   Ok(())
 }
 
-pub async fn validate_assets(
+pub async fn get_invalid_assets(
   source: SourceType,
   asset_path: &Path,
   asset_index: &AssetIndex,

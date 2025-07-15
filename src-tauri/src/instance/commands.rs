@@ -24,12 +24,10 @@ use super::{
 use crate::{
   error::SJMCLResult,
   instance::{
-    helpers::{
-      assets::get_assets_download_params, client_json::McClientInfo,
-      libraries::get_libraries_download_params,
-    },
-    models::misc::ModLoader,
+    helpers::{client_json::McClientInfo, misc::get_instance_subdir_paths},
+    models::misc::{AssetIndex, ModLoader},
   },
+  launch::helpers::file_validator::{get_invalid_assets, get_invalid_library_files},
   launcher_config::{
     helpers::misc::get_global_game_config,
     models::{GameConfig, GameDirectory, LauncherConfig},
@@ -864,12 +862,44 @@ pub async fn create_instance(
     sha1: Some(client_download_info.sha1.clone()),
   }));
 
-  // Download libraries (use task)
-  task_params
-    .extend(get_libraries_download_params(&directory, &version_info, priority_list[0]).await?);
-  // Download assets (use task)
-  task_params
-    .extend(get_assets_download_params(&app, &directory, &version_info, priority_list[0]).await?);
+  let subdirs = get_instance_subdir_paths(
+    &app,
+    &instance,
+    &[&InstanceSubdirType::Libraries, &InstanceSubdirType::Assets],
+  )
+  .ok_or(InstanceError::InstanceNotFoundByID)?;
+  let [libraries_dir, assets_dir] = subdirs.as_slice() else {
+    return Err(InstanceError::InstanceNotFoundByID.into());
+  };
+
+  // We only download libraries if they are invalid (not already downloaded)
+  task_params.extend(
+    get_invalid_library_files(priority_list[0], libraries_dir, &version_info, false).await?,
+  );
+
+  // Download asset index
+  let asset_index_raw = client
+    .get(version_info.asset_index.url.clone())
+    .send()
+    .await
+    .map_err(|_| InstanceError::NetworkError)?
+    .json::<serde_json::Value>()
+    .await
+    .map_err(|_| InstanceError::AssetIndexParseError)?;
+
+  let asset_index_path = assets_dir.join("indexes");
+
+  fs::create_dir_all(&asset_index_path).map_err(|_| InstanceError::FolderCreationFailed)?;
+  fs::write(
+    asset_index_path.join(format!("{}.json", version_info.asset_index.id)),
+    asset_index_raw.to_string(),
+  )
+  .map_err(|_| InstanceError::FileCreationFailed)?;
+
+  // We only download assets if they are invalid (not already downloaded)
+  let asset_index: AssetIndex =
+    serde_json::from_value(asset_index_raw).map_err(|_| InstanceError::AssetIndexParseError)?;
+  task_params.extend(get_invalid_assets(priority_list[0], assets_dir, &asset_index, false).await?);
 
   schedule_progressive_task_group(app, format!("game-client:{}", name), task_params, true).await?;
   // TODO: install mod loaders

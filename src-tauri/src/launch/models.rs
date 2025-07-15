@@ -1,7 +1,6 @@
 use crate::account::models::PlayerInfo;
-use crate::instance::helpers::assets::AssetIndex;
 use crate::instance::helpers::client_json::McClientInfo;
-use crate::instance::models::misc::Instance;
+use crate::instance::models::misc::{AssetIndex, Instance};
 use crate::launcher_config::models::{GameConfig, JavaInfo};
 use serde::{Deserialize, Serialize};
 use smart_default::SmartDefault;

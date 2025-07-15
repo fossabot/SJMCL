@@ -1,7 +1,7 @@
 use super::{
   helpers::{
     command_generator::generate_launch_command,
-    file_validator::{extract_native_libraries, validate_library_files},
+    file_validator::{extract_native_libraries, get_invalid_library_files},
     jre_selector::select_java_runtime,
     process_monitor::{
       change_process_window_title, kill_process, monitor_process, set_process_priority,
@@ -17,13 +17,12 @@ use crate::{
   error::SJMCLResult,
   instance::{
     helpers::{
-      assets::AssetIndex,
       client_json::McClientInfo,
       misc::{get_instance_game_config, get_instance_subdir_paths},
     },
-    models::misc::{Instance, InstanceError, InstanceSubdirType},
+    models::misc::{AssetIndex, Instance, InstanceError, InstanceSubdirType},
   },
-  launch::{helpers::file_validator::validate_assets, models::LaunchError},
+  launch::{helpers::file_validator::get_invalid_assets, models::LaunchError},
   launcher_config::models::{FileValidatePolicy, JavaInfo, LauncherConfig, LauncherVisiablity},
   resource::helpers::misc::get_source_priority_list,
   storage::load_json_async,
@@ -137,13 +136,13 @@ pub async fn validate_game_files(
   let incomplete_files = match validate_policy {
     FileValidatePolicy::Disable => return Ok(()), // skip
     FileValidatePolicy::Normal => [
-      validate_library_files(priority_list[0], libraries_dir, &client_info, false).await?,
-      validate_assets(priority_list[0], assets_dir, &asset_index, false).await?,
+      get_invalid_library_files(priority_list[0], libraries_dir, &client_info, false).await?,
+      get_invalid_assets(priority_list[0], assets_dir, &asset_index, false).await?,
     ]
     .concat(),
     FileValidatePolicy::Full => [
-      validate_library_files(priority_list[0], libraries_dir, &client_info, true).await?,
-      validate_assets(priority_list[0], assets_dir, &asset_index, true).await?,
+      get_invalid_library_files(priority_list[0], libraries_dir, &client_info, true).await?,
+      get_invalid_assets(priority_list[0], assets_dir, &asset_index, true).await?,
     ]
     .concat(),
   };
