@@ -12,7 +12,7 @@ use crate::{
   tasks::{download::DownloadParam, PTaskParam},
 };
 
-pub async fn download_library_files(
+pub async fn get_libraries_download_params(
   directory: &GameDirectory,
   version_info: &McClientInfo,
   source: SourceType,

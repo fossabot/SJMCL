@@ -28,7 +28,7 @@ pub struct AssetIndexItem {
   pub size: i64,
 }
 
-pub async fn download_assets(
+pub async fn get_assets_download_params(
   app: &tauri::AppHandle,
   directory: &GameDirectory,
   version_info: &McClientInfo,

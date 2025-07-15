@@ -64,16 +64,9 @@ pub async fn select_suitable_jre(
     .join(format!("{}.json", instance.name));
   let client_info = load_json_async::<McClientInfo>(&client_path).await?;
 
-  let asset_index_path = instance
-    .version_path
-    .parent()
-    .ok_or(LaunchError::DirectoryNotFound)?
-    .parent()
-    .ok_or(LaunchError::DirectoryNotFound)?
-    .join(format!(
-      "assets/indexes/{}.json",
-      client_info.asset_index.id
-    ));
+  let asset_index_path = get_instance_subdir_paths(&app, &instance, &[&InstanceSubdirType::Assets])
+    .ok_or(InstanceError::InstanceNotFoundByID)?[0]
+    .join(format!("indexes/{}.json", client_info.asset_index.id));
   let asset_index = load_json_async::<AssetIndex>(&asset_index_path).await?;
 
   let javas = javas_state.lock().unwrap().clone();

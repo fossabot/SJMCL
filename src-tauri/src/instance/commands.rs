@@ -25,7 +25,8 @@ use crate::{
   error::SJMCLResult,
   instance::{
     helpers::{
-      assets::download_assets, client_json::McClientInfo, libraries::download_library_files,
+      assets::get_assets_download_params, client_json::McClientInfo,
+      libraries::get_libraries_download_params,
     },
     models::misc::ModLoader,
   },
@@ -863,8 +864,12 @@ pub async fn create_instance(
     sha1: Some(client_download_info.sha1.clone()),
   }));
 
-  task_params.extend(download_library_files(&directory, &version_info, priority_list[0]).await?);
-  task_params.extend(download_assets(&app, &directory, &version_info, priority_list[0]).await?);
+  // Download libraries (use task)
+  task_params
+    .extend(get_libraries_download_params(&directory, &version_info, priority_list[0]).await?);
+  // Download assets (use task)
+  task_params
+    .extend(get_assets_download_params(&app, &directory, &version_info, priority_list[0]).await?);
 
   schedule_progressive_task_group(app, format!("game-client:{}", name), task_params, true).await?;
   // TODO: install mod loaders
