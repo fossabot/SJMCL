@@ -31,6 +31,7 @@ import {
 } from "@/components/common/option-item";
 import SegmentedControl from "@/components/common/segmented";
 import { useLauncherConfig } from "@/contexts/config";
+import { useSharedModals } from "@/contexts/shared-modal";
 import { useTaskContext } from "@/contexts/task";
 import { useToast } from "@/contexts/toast";
 import { TaskDescStatusEnums } from "@/models/task";
@@ -39,6 +40,7 @@ import { ConfigService } from "@/services/config";
 const DownloadSettingsPage = () => {
   const { t } = useTranslation();
   const toast = useToast();
+  const { openGenericConfirmDialog, closeSharedModal } = useSharedModals();
 
   const { config, update } = useLauncherConfig();
   const downloadConfigs = config.download;
@@ -119,6 +121,7 @@ const DownloadSettingsPage = () => {
       .finally(() => {
         setIsClearingDownloadCache(false);
       });
+    closeSharedModal("generic-confirm");
   };
 
   const downloadSettingGroups: OptionItemGroupProps[] = [
@@ -361,7 +364,15 @@ const DownloadSettingsPage = () => {
               size="xs"
               colorScheme="red"
               isLoading={isClearingDownloadCache}
-              onClick={() => handleClearDownloadCache()}
+              onClick={() =>
+                openGenericConfirmDialog({
+                  title: t("ClearDownloadCacheAlertDialog.dialog.title"),
+                  body: t("ClearDownloadCacheAlertDialog.dialog.content"),
+                  btnOK: t("General.delete"),
+                  isAlert: true,
+                  onOKCallback: handleClearDownloadCache,
+                })
+              }
               disabled={hasActiveDownloadTasks}
             >
               {t("DownloadSettingPage.cache.settings.clear.button")}

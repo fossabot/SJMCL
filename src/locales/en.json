@@ -285,6 +285,12 @@
       }
     }
   },
+  "ClearDownloadCacheAlertDialog": {
+    "dialog": {
+      "title": "Clear Download Cache",
+      "content": "Are you sure you want to clear the download cache? This action cannot be undone."
+    }
+  },
   "ComingSoonSign": {
     "text": "This page is not available yet, coming soon!"
   },
@@ -436,7 +442,7 @@
         },
         "clear": {
           "title": "Clear Download Cache",
-          "description": "Clear log files in the download cache directory.",
+          "description": "Clear all files in the download cache directory.",
           "button": "Clear"
         }
       }
