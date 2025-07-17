@@ -430,7 +430,7 @@
       "title": "Cache",
       "settings": {
         "directory": {
-          "title": "Download Cache Diretory",
+          "title": "Download Cache Directory",
           "select": "Change",
           "open": "Open"
         },

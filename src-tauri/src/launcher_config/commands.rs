@@ -283,7 +283,6 @@ pub async fn clear_download_cache(app: AppHandle) -> SJMCLResult<()> {
   let launcher_config = app.state::<Mutex<LauncherConfig>>();
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
 
-  // 检查是否有活跃的下载任务
   if monitor.has_active_download_tasks() {
     return Err(LauncherConfigError::HasActiveDownloadTasks.into());
   }
