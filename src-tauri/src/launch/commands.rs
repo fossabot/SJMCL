@@ -273,7 +273,7 @@ pub async fn launch_game(
 
 #[tauri::command]
 pub fn cancel_launch_process(launching_state: State<'_, Mutex<LaunchingState>>) -> SJMCLResult<()> {
-  let mut launching: std::sync::MutexGuard<'_, LaunchingState> = launching_state.lock().unwrap();
+  let mut launching = launching_state.lock().unwrap();
 
   // kill process if step 4 has been reached
   if launching.pid != 0 {
