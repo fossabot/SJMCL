@@ -31,12 +31,27 @@ import {
 } from "@/components/common/option-item";
 import SegmentedControl from "@/components/common/segmented";
 import { useLauncherConfig } from "@/contexts/config";
+import { useTaskContext } from "@/contexts/task";
+import { useToast } from "@/contexts/toast";
+import { TaskDescStatusEnums } from "@/models/task";
+import { ConfigService } from "@/services/config";
 
 const DownloadSettingsPage = () => {
   const { t } = useTranslation();
+  const toast = useToast();
+
   const { config, update } = useLauncherConfig();
   const downloadConfigs = config.download;
   const primaryColor = config.appearance.theme.primaryColor;
+
+  const { tasks } = useTaskContext();
+  const hasActiveDownloadTasks = tasks.some(
+    (taskGroup) =>
+      !(
+        taskGroup.status === TaskDescStatusEnums.Completed ||
+        taskGroup.status === TaskDescStatusEnums.Failed
+      )
+  );
 
   const [concurrentCount, setConcurrentCount] = useState<number>(
     downloadConfigs.transmission.concurrentCount
@@ -53,6 +68,8 @@ const DownloadSettingsPage = () => {
   const [proxyHost, setProxyHost] = useState<string>(
     downloadConfigs.proxy.host
   );
+  const [isClearingDownloadCache, setIsClearingDownloadCache] =
+    useState<boolean>(false);
 
   const sourceStrategyTypes = ["auto", "official", "mirror"];
   const proxyTypeOptions = [
@@ -77,6 +94,31 @@ const DownloadSettingsPage = () => {
     } else if (selectedDirectory === null) {
       console.log("Directory selection was cancelled.");
     }
+  };
+
+  const handleClearDownloadCache = () => {
+    if (isClearingDownloadCache || hasActiveDownloadTasks) {
+      return;
+    }
+    setIsClearingDownloadCache(true);
+    ConfigService.clearDownloadCache()
+      .then((response) => {
+        if (response.status === "success") {
+          toast({
+            title: response.message,
+            status: "success",
+          });
+        } else {
+          toast({
+            title: response.message,
+            description: response.details,
+            status: "error",
+          });
+        }
+      })
+      .finally(() => {
+        setIsClearingDownloadCache(false);
+      });
   };
 
   const downloadSettingGroups: OptionItemGroupProps[] = [
@@ -300,6 +342,30 @@ const DownloadSettingsPage = () => {
                 {t("DownloadSettingPage.cache.settings.directory.open")}
               </Button>
             </HStack>
+          ),
+        },
+        {
+          title: t("DownloadSettingPage.cache.settings.clear.title"),
+          description: hasActiveDownloadTasks ? (
+            <Text fontSize="xs" color="red.600">
+              {t(
+                "Services.config.clearDownloadCache.error.description.HAS_ACTIVE_DOWNLOAD_TASKS"
+              )}
+            </Text>
+          ) : (
+            t("DownloadSettingPage.cache.settings.clear.description")
+          ),
+          children: (
+            <Button
+              variant="subtle"
+              size="xs"
+              colorScheme="red"
+              isLoading={isClearingDownloadCache}
+              onClick={() => handleClearDownloadCache()}
+              disabled={hasActiveDownloadTasks}
+            >
+              {t("DownloadSettingPage.cache.settings.clear.button")}
+            </Button>
           ),
         },
       ],
