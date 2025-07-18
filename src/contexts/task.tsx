@@ -75,7 +75,10 @@ export const TaskContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     let knownTotalArr = group.taskDescs.filter((t) => t.total && t.total > 0);
     let knownTotal = knownTotalArr.reduce((acc, t) => acc + t.total, 0);
-    let knownCurrent = knownTotalArr.reduce((acc, t) => acc + (t.current || 0), 0);
+    let knownCurrent = knownTotalArr.reduce(
+      (acc, t) => acc + (t.current || 0),
+      0
+    );
     let estimatedTotal;
     if (knownTotalArr.length > 0) {
       estimatedTotal =
