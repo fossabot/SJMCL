@@ -75,12 +75,13 @@ export const TaskContextProvider: React.FC<{ children: React.ReactNode }> = ({
 
     let knownTotalArr = group.taskDescs.filter((t) => t.total && t.total > 0);
     let knownTotal = knownTotalArr.reduce((acc, t) => acc + t.total, 0);
+    let knownCurrent = knownTotalArr.reduce((acc, t) => acc + (t.current || 0), 0);
     let estimatedTotal =
       knownTotal +
       (group.taskDescs.length - knownTotalArr.length) *
         (knownTotal / knownTotalArr.length); // Estimate unknown task's size based on known tasks' average size
 
-    group.progress = estimatedTotal ? (knownTotal * 100) / estimatedTotal : 0;
+    group.progress = estimatedTotal ? (knownCurrent * 100) / estimatedTotal : 0;
 
     group.estimatedTime = undefined;
     group.taskDescs.forEach((t) => {
