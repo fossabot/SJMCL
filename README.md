@@ -22,6 +22,7 @@
 [![Tauri](https://img.shields.io/badge/Tauri-v2-FFC131?style=for-the-badge&logo=tauri&logoColor=white&labelColor=24C8DB)](https://tauri.app/)
 [![Next JS](https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![Chakra UI](https://img.shields.io/badge/chakra_ui-v2-38B2AC?style=for-the-badge&logo=chakraui&logoColor=white&labelColor=319795)](https://v2.chakra-ui.com/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUNIkeEN%2FSJMCL.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FUNIkeEN%2FSJMCL?ref=badge_shield)
 
 ## Getting Started
 
@@ -110,3 +111,7 @@ We sincerely thank the following organizations for their development and communi
     <img src="docs/figs/partners/gnwork.png" alt="GNWORK" style="height: 45px;">
   </picture>
 ](https://space.bilibili.com/403097853)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FUNIkeEN%2FSJMCL.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FUNIkeEN%2FSJMCL?ref=badge_large)
